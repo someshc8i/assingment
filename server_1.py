@@ -34,5 +34,5 @@ while True:
     req.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(req, json.dumps(score))
     print(response)
-    time.sleep(5)
+    time.sleep(50)
 httpd.serve_forever()
