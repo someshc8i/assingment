@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from rest_framework.views import APIView
+# from rest_framework.views import APIView
 from django.http import JsonResponse
-from rest_framework.response import Response
+# from rest_framework.response import Response
 from django.shortcuts import redirect
 from rest_framework.exceptions import ParseError
 from rest_framework import status
