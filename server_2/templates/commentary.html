@@ -1,0 +1,72 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+</head>
+  <body>
+    <h1>Commentator</h1>
+    <div id = "info_box">
+      <img id="profile_img" src="" alt="Smiley face" height="42" width="42">
+      Name : <div id="name"></div></br>
+      About : <div id="about_me"></div></br>
+      Why Cricket ? : <div id="why_cricket"></div></br>
+      Moments : <div id="fav_cricket_moments"></div></br>
+      Comments :  <div id="comments"></div></br>
+
+    </div>
+    <button type="button" onclick="HACBclick()">Hold and Comment</button>
+    <div id = "comment_box" style="display:none">
+      <textarea cols="40" rows="5" type="text" id="comment" name="FirstName" value="Enter Commentary"></textarea>
+      <button type="button" onclick="send()">Send</button>
+    </div>
+  </body>
+
+</html>
+<script language="javascript">
+
+
+function CommentatorDetails() {
+$.get("api/commentator_details/" + {{ pk }}, function(data){
+    console.log(data);
+    document.getElementById("name").innerHTML = data['name'];
+    document.getElementById("about_me").innerHTML = data['about_me'];
+    document.getElementById("why_cricket").innerHTML = data['why_cricket'];
+    document.getElementById("fav_cricket_moments").innerHTML = data['fav_cricket_moments'];
+    var x = document.getElementById("profile_img");
+    x.setAttribute('src' , data['photo']);
+    var a = ''
+    for(count = 0; count < data['commentary'].length; count++){
+      a = a + (count+1) + ' : ' +data['commentary'][count].text + '</br></br>';
+    }
+    document.getElementById("comments").innerHTML = a;
+
+  });
+}
+$( document ).ready(function() {
+    CommentatorDetails();
+});
+;
+
+function HACBclick() {
+  $.get("api/hold_and_comment", function(data){
+      console.log(data);
+      document.getElementById("comment").value = '';
+      $("#comment_box").show();
+  });
+  }
+  function send() {
+    var comment = $("#comment").val();
+    var data = { comment: comment  , pk : {{ pk }} };
+    data = JSON.stringify(data);
+      $.ajax({
+        type: "POST",
+        url: "api/comment_reciever",
+        data: data,
+        success:   function(data, status){
+              console.log(data);
+              $("#comment_box").hide();
+              CommentatorDetails();
+          },
+        dataType: "json"
+      });
+    }
+</script>
